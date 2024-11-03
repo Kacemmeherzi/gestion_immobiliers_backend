@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Distribution / packaging
+.Python
+my_env/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.testing
+.env.staging
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+*.sqlite3
+*.db
+
+# If you have specific secrets or configurations
+
