@@ -2,7 +2,6 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from app_annonces.models import Annonce
 from .models import Favorite
 from .serializers import FavoriteSerializer
 from django.contrib.auth.models import User
