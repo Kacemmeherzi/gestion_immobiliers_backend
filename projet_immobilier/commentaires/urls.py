@@ -1,8 +1,8 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import CommentaireViewSet
+from django.urls import path
+from .views import  CommentaireListCreateAPIView
+
 
 urlpatterns = [
-    path('add/', CommentaireViewSet.as_view(), name='add_commentaire'),  # Create
-   
+    path('', CommentaireListCreateAPIView.as_view(), name='commentaire-list-create'),
+    path('<int:id>', CommentaireListCreateAPIView.as_view(), name='commentaire-detail'),
 ]
