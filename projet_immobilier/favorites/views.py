@@ -1,48 +1,48 @@
-# views.py
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from app_annonces.models import Annonce
 from .models import Favorite
 from .serializers import FavoriteSerializer
 from django.contrib.auth.models import User
-# Create a favorite
-class AddFavoriteView(generics.CreateAPIView):
-    queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
-   # permission_classes = [IsAuthenticated]
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+# pk used maa generics default given class or lookup_field = 'id'
+class FavoriteView(APIView):
+    
+    def get(self, request, id=None):
+        if id:  # Get a specific Favorite by id
+            favorite = Favorite.objects.filter(id=id).first()
+            if favorite is None:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serializer = FavoriteSerializer(favorite)
+            return Response(serializer.data)
+        else:  # Get a list of all Favorites
+            favorites = Favorite.objects.all()
+            serializer = FavoriteSerializer(favorites, many=True)
+            return Response(serializer.data)
 
-# List all favorites
-class FavoriteListView(generics.ListAPIView):
-    queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
-   # permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        id = self.kwargs['id']  # Get the user_id from the URL parameters
-        try:
-            user = User.objects.get(id=id)  # Check if the user exists
-        except User.DoesNotExist:
-            return Favorite.objects.none()  # Return an empty queryset if the user does not exist
+    def post(self, request):
+        data = {
+            'annonce': request.data.get('annonce'),  # Expect annonce ID
+            'user': request.data.get('user')  # Expect user ID from the request body
+        }
+        # Create the serializer instance with the prepared data
+        serializer = FavoriteSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()  # Save the Favorite instance
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        # Return favorites for the specified user
-        return Favorite.objects.filter(user=user)
 
 
+    
 
-# Retrieve a specific favorite
-class FavoriteDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
-   # permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        id = self.kwargs['id']  # Get the user_id from the URL parameters
-        try:
-            favorite = Favorite.objects.get(id=id) 
-        except Favorite.DoesNotExist:
-            return Favorite.objects.none()  # Return an empty queryset if the user does not exist
-        
-        
-        # Return favorites for the specified user
-        return   favorite 
+    def delete(self, request, id):
+        # Delete a Favorite by id
+        favorite = Favorite.objects.filter(id=id).first()
+        if favorite is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        favorite.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
