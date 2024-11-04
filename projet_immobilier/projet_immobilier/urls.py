@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('app_annonces.urls')),
     path('favorites/', include('favorites.urls')),   
-
+    path('commentaires/', include('commentaires.urls')),
     
 ]
