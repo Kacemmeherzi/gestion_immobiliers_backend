@@ -45,4 +45,4 @@ class FavoriteView(APIView):
         if favorite is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         favorite.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT,data="deleted")
