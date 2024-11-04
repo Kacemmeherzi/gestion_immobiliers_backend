@@ -14,4 +14,4 @@ class Commentaire(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Commentaire de {self.user.username} sur {self.annonce.title}"
+        return f"Commentaire de {self.user.username} sur {self.annonce.titre}"
