@@ -17,6 +17,10 @@ class Annonce(models.Model):
     description = models.TextField()
     nombre_de_chambres = models.IntegerField()
     surface = models.DecimalField(max_digits=10, decimal_places=2)
+    image  =  models.CharField(max_length=300,default="no image added")
+    equiped = models.BooleanField(default=False)
+    
+
 
     def __str__(self):
         return self.titre
