@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'favorites', 
     'commentaires',
+    'occupations'
     
 ]
 
