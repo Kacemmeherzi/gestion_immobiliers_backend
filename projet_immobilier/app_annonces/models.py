@@ -16,7 +16,8 @@ class Annonce(models.Model):
     surface = models.DecimalField(max_digits=10, decimal_places=2)
     image  =  models.CharField(max_length=300,default="no image added")
     equiped = models.BooleanField(default=False)
-    
+    lease_duration = models.IntegerField(null=True, blank=True)  # Relevant for renting
+    is_negotiable = models.BooleanField(default=False)  # Relevant for selling
 
 
     def __str__(self):
