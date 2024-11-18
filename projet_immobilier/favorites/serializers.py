@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from app_annonces.serializers import AnnonceSerializer
 from app_annonces.models import Annonce
+from occupations.models import Occupation
 from .models import Favorite
 from rest_framework import serializers
 from .models import Favorite, User, Annonce
