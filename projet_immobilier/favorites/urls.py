@@ -1,7 +1,10 @@
 from django.urls import path
-from favorites.views import FavoriteView
+from favorites.views import    create_favorite , delete_favorite, get_favorites_by_user
 
 urlpatterns = [
-    path('', FavoriteView.as_view(), name='favorite-list'),  # List and Create
-    path('<int:id>', FavoriteView.as_view(), name='favorite-detail'),
+    path('getfavorite/<int:id>',get_favorites_by_user, name='getfavbyuserid'),
+    path('delete/<int:id>', delete_favorite, name='deletefavortie'),
+    path('create', create_favorite, name='create'),
+
+
 ]
