@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'favorites', 
     'commentaires',
     'occupations',
+    'users'
     
     
 ]
