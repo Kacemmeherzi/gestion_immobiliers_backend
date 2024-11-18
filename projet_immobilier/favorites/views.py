@@ -1,47 +1,39 @@
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 from .models import Favorite
-from .serializers import FavoriteSerializer
-from django.contrib.auth.models import User
-# pk used maa generics default given class or lookup_field = 'id'
-class FavoriteView(APIView):
+from .serializers import CreateFavoriteSerializer, FavoriteSerializer
+# pk used maa generics default given class or lookup_field = 'id' if nestaaml class and apiview
+
+@api_view(['GET'])
+def get_favorites_by_user(request, id):
     
-    def get(self, request, id=None):
-        if id:  # Get a specific Favorite by id
-            favorite = Favorite.objects.filter(id=id).first()
-            if favorite is None:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            serializer = FavoriteSerializer(favorite)
-            return Response(serializer.data)
-        else:  # Get a list of all Favorites
-            favorites = Favorite.objects.all()
-            serializer = FavoriteSerializer(favorites, many=True)
-            return Response(serializer.data)
+    try:
+        favorites = Favorite.objects.filter(user_id=id)
+        serializer = FavoriteSerializer(favorites, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Favorite.DoesNotExist:
+        return Response({"error": "Favorites not found for the given user."}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['POST'])
+def create_favorite(request):
+    
+    serializer = CreateFavoriteSerializer(data=request.data)
+    if serializer.is_valid():
+        favorite = serializer.save()
 
-    def post(self, request):
-        data = {
-            'annonce': request.data.get('annonce'),  # Expect annonce ID
-            'user': request.data.get('user')  # Expect user ID from the request body
-        }
-        # Create the serializer instance with the prepared data
-        serializer = FavoriteSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()  # Save the Favorite instance
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Favorite created successfully.","favorite": FavoriteSerializer(favorite).data}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
 
     
-
-    def delete(self, request, id):
-        # Delete a Favorite by id
-        favorite = Favorite.objects.filter(id=id).first()
-        if favorite is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        favorite.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT,data="deleted")
+@api_view(['POST'])
+def delete_favorite(request, id):
+    favorite = Favorite.objects.filter(id=id).first()
+    if favorite is None:
+        return Response({"error": "Favorite not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    favorite.delete()
+    return Response({"message": "Favorite deleted successfully."}, status=status.HTTP_200_OK)
