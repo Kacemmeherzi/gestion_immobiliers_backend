@@ -1,8 +1,12 @@
 from django.urls import path
-from .views import  CommentaireListCreateAPIView
+from .views import   create_comment, delete_comment, get_comments
+
+
 
 
 urlpatterns = [
-    path('', CommentaireListCreateAPIView.as_view(), name='commentaire-list-create'),
-    path('<int:id>', CommentaireListCreateAPIView.as_view(), name='commentaire-detail'),
+    path('getall/<int:annonce_id>', get_comments, name='get_comments'),
+    path('create', create_comment, name='create_comment'),
+    path('delete/<int:comment_id>', delete_comment, name='delete_comment'),
 ]
+
