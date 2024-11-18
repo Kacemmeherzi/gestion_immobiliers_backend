@@ -1,62 +1,38 @@
-
-from rest_framework import viewsets
-
-from .models import Commentaire
-from .serializers import CommentaireSerializer
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 from .models import Commentaire
-from .serializers import CommentaireSerializer
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
+from .serializers import CommentaireCreateSerializer, CommentaireSerializer
 
+# View to list all comments for a particular annonce
+@api_view(['GET'])
+def get_comments(request, annonce_id):
+   
+    try:
+        commentaires = Commentaire.objects.filter(annonce_id=annonce_id)
+        serializer = CommentaireSerializer(commentaires, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Commentaire.DoesNotExist:
+        return Response({'error': 'Commentaires not found for this annonce.'}, status=status.HTTP_404_NOT_FOUND)
 
-class CommentaireListCreateAPIView(APIView):
-   # lookup_field = 'id'
-    # GET: List all comments, POST: Create a new comment
-    def get(self, request, id=None):
-        if id:  # Get a specific Favorite by id
-            comm = Commentaire.objects.filter(id=id).first()
-            if comm is None:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            serializer = CommentaireSerializer(comm)
-            return Response(serializer.data)
-        else:  # Get a list of all Favorites
-            commentaires = Commentaire.objects.all()
-            serializer = CommentaireSerializer(commentaires, many=True)
-            return Response(serializer.data)
+# View to create a new comment
+@api_view(['POST'])
+def create_comment(request):
+    serializer = CommentaireCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()  # Save the comment with the user and annonce
+     #    comm = CommentaireSerializer(serializer).data
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+   
 
-
-    def post(self, request):
-
-        user = get_object_or_404(User, pk=request.data.get('user'))
-        print(user)
-        data = {
-            'annonce': request.data.get('annonce'),  
-            'contenu' :request.data.get('contenu'),
-            'user' : user.id  }
-        print (request.data.get('user'))
-        serializer = CommentaireSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()  # Save the Favorite instance
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    # GET: Retrieve, PUT: Update, DELETE: Delete a single comment
-    
-
-    def put(self, request, id=None):
-        commentaire = get_object_or_404(Commentaire, pk=id)
-        serializer = CommentaireSerializer(commentaire, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, id=None):
-        commentaire = get_object_or_404(Commentaire, pk=id)
-        commentaire.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT,data="deleted")
-
+# View to delete a specific comment by id
+@api_view(['POST'])
+def delete_comment(request, comment_id):
+   
+    try:
+        comment = Commentaire.objects.get(id=comment_id)
+        comment.delete()
+        return Response({'message': 'Comment deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    except Commentaire.DoesNotExist:
+        return Response({'error': 'Comment not found.'}, status=status.HTTP_404_NOT_FOUND)
