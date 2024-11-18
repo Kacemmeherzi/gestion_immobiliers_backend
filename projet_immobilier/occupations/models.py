@@ -1,11 +1,12 @@
 from django.db import models
 
 from app_annonces.models import Annonce
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Occupation(models.Model):
-  #  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='occupations')
-  #  client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='occupations')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_occupations')
+    client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='client_occupations')
     occupation_type = models.CharField(max_length=20)
     annonce = models.ForeignKey(Annonce, on_delete=models.CASCADE, related_name='occupations')
     start_date = models.DateField(null=True, blank=True)
@@ -13,4 +14,4 @@ class Occupation(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.occupation_type.name}"
+        return f"{self.client.username} - {self.occupation_type}"
