@@ -3,6 +3,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+
+from app_annonces.models import Annonce
 from .serializers import OccupationCreateSerializer, OccupationSerializer
 from .models import Occupation
 from django.shortcuts import get_object_or_404
@@ -54,6 +56,32 @@ def get_all_occupations(request):
     try:
         occupations = Occupation.objects.all()  # Fetch all occupations
         # Serialize the occupations
+        serializer = OccupationSerializer(occupations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST']) 
+def accept_occupation (request,id) : 
+    try :
+        occupation = Occupation.objects.get(pk=id)
+
+        occupation.is_active  = True 
+        occupation.save()
+        annonce = occupation.annonce 
+        annonce.is_occupied = True 
+        annonce.save()
+        return Response({"succes":OccupationSerializer(occupation).data},status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    
+@api_view(['GET'])
+def get_occupations_by_annonce(request,annonceid):
+    
+    try:
+        annonce = Annonce.objects.get(pk=annonceid)
+        occupations = Occupation.objects.filter(annonce=annonce).all()  # Fetch all occupations
         serializer = OccupationSerializer(occupations, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
