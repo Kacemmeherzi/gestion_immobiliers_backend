@@ -2,14 +2,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Annonce
-from .serializers import AnnonceSerializer
+from .serializers import AnnonceCreateSerializer, AnnonceSerializer
 
 @api_view(['POST'])
 def create_annonce(request):
     """
     Create a new Annonce.
     """
-    serializer = AnnonceSerializer(data=request.data)
+    serializer = AnnonceCreateSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -44,6 +44,6 @@ def get_all_annonces(request):
     """
     Retrieve all Annonce objects.
     """
-    annonces = Annonce.objects.all()
+    annonces = Annonce.objects.all().filter(is_occupied=False)
     serializer = AnnonceSerializer(annonces, many=True)  # Serialize all objects
     return Response(serializer.data, status=status.HTTP_200_OK)
