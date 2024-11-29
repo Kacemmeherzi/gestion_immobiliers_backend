@@ -32,3 +32,4 @@ staticfiles/
 
 # If you have specific secrets or configurations
 
+migrations/
