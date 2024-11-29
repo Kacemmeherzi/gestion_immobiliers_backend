@@ -31,11 +31,26 @@ class OccupationSerializer(serializers.ModelSerializer):
 
 
 class OccupationCreateSerializer(serializers.ModelSerializer):
+
     owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     client = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     annonce = serializers.PrimaryKeyRelatedField(queryset=Annonce.objects.all())
 
+
+
+
     class Meta:
         model = Occupation
         fields = '__all__'
+        
+    def create(self, validated_data):
+        # Create the Occupation object
+        annonce = validated_data.get('annonce')
+        # Update the 'is_occupied' field of the related Annonce to True
+        annonce.is_occupied = 'yes'
+        annonce.save()
+
+        # Create the Occupation instance
+        occupation = Occupation.objects.create(**validated_data)
+        return occupation
     
