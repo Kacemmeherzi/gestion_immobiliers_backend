@@ -12,7 +12,6 @@ class Occupation(models.Model):
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
-    OfferedPrice = models.TextField(max_length=300,default="no price offered")
 
     def __str__(self):
         return f"{self.client.username} - {self.occupation_type}"
