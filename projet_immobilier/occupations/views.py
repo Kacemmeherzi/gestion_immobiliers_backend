@@ -62,11 +62,11 @@ def get_all_occupations(request):
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST']) 
-def accept_occupation (request,id , status) : 
+def accept_occupation (request,id , statut) : 
     try :
         occupation = Occupation.objects.get(pk=id)
 
-        occupation.is_active  = status
+        occupation.is_active  = statut
         occupation.save()
         annonce = occupation.annonce 
         annonce.is_occupied = True 

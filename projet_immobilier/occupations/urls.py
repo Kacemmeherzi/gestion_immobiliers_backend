@@ -6,7 +6,7 @@ urlpatterns = [
     path('owner/<int:user_id>/', get_occupations_by_owner, name='get_occupations_by_owner'),
     path('all/', get_all_occupations, name='get_all_occupations'),
     path('create',create_occupation , name='get_all_occupations'),
-    path('activate/<int:id>/status/<str:status>',accept_occupation, name='get_all_occupations'),
+    path('activate/<int:id>/status/<str:statut>',accept_occupation, name='get_all_occupations'),
     path('getallbyannonce/<int:annonceid>/',get_occupations_by_annonce, name='get_all_occupations'),
 
 
