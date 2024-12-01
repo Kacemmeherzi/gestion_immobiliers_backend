@@ -11,7 +11,12 @@ class Occupation(models.Model):
     annonce = models.ForeignKey(Annonce, on_delete=models.CASCADE, related_name='occupations')
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+<<<<<<< HEAD
     is_active = models.BooleanField(default=False)
+=======
+    is_active = models.TextField(max_length=300,default="en attente")
+    OfferedPrice = models.TextField(max_length=300,default="no price offered")
+>>>>>>> f9d227380daa17c995e6efdf0b8bcb295bc5c98a
 
     def __str__(self):
         return f"{self.client.username} - {self.occupation_type}"
