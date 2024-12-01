@@ -44,13 +44,6 @@ class OccupationCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
     def create(self, validated_data):
-        # Create the Occupation object
-        annonce = validated_data.get('annonce')
-        # Update the 'is_occupied' field of the related Annonce to True
-        annonce.is_occupied = True
-        annonce.save()
-
-        # Create the Occupation instance
         occupation = Occupation.objects.create(**validated_data)
         return occupation
     
