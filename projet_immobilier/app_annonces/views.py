@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Annonce
 from .serializers import AnnonceCreateSerializer, AnnonceSerializer
-
+from django.contrib.auth.models import User 
 @api_view(['POST'])
 def create_annonce(request):
     """
@@ -45,5 +45,12 @@ def get_all_annonces(request):
     Retrieve all Annonce objects.
     """
     annonces = Annonce.objects.all().filter(is_occupied=False)
+    serializer = AnnonceSerializer(annonces, many=True)  # Serialize all objects
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_all_annonces_by_owner(request,id):
+    owner = User.objects.get(id=id)
+    annonces = Annonce.objects.all().filter(owner=owner)
     serializer = AnnonceSerializer(annonces, many=True)  # Serialize all objects
     return Response(serializer.data, status=status.HTTP_200_OK)
