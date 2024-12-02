@@ -2,13 +2,24 @@ from rest_framework import serializers
 
 from app_annonces.models import Annonce
 from django.contrib.auth.models import User
-from .models import Commentaire
 
+from users.models import UserProfile
+from .models import Commentaire
+class UserProfileserializer(serializers.ModelSerializer) : 
+    class Meta:
+        model = UserProfile
+        fields = ['phone_number', 'role']
+# Nested serializer for User
+class UserSerializer(serializers.ModelSerializer):
+    profile = UserProfileserializer()
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name','profile']
 class CommentaireSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     class Meta:
         model = Commentaire
-        fields = ['id', 'annonce', 'user', 'contenu', 'date_creation']
-        read_only_fields = ['date_creation']
+        fields = '__all__'
 
         
 class CommentaireCreateSerializer(serializers.ModelSerializer):
