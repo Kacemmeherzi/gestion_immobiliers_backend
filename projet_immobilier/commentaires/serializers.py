@@ -17,7 +17,7 @@ class CommentaireCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Commentaire
-        fields = ['user_id', 'annonce_id', 'contenu', 'date_creation']
+        fields = ['user_id', 'annonce_id', 'contenu']
 
     def create(self, validated_data):
         # Get the user and annonce objects using the user_id and annonce_id
