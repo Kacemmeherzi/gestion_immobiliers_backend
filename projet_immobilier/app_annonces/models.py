@@ -14,7 +14,8 @@ class Annonce(models.Model):
     description = models.TextField()
     nombre_de_chambres = models.IntegerField()
     surface = models.DecimalField(max_digits=10, decimal_places=2)
-    image  =  models.CharField(max_length=1000,default="no image added")
+    image  = models.ImageField(upload_to='uploads/',default='no image')  # Define the upload path
+  #  created_at = models.DateTimeField(auto_now_add=True,default="no date added")
     equiped = models.BooleanField(default=False)
     lease_duration = models.IntegerField(null=True, blank=True)  # Relevant for renting
     is_negotiable = models.BooleanField(default=False)  # Relevant for selling
