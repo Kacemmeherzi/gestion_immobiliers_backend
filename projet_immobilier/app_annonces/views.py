@@ -1,10 +1,14 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view ,parser_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Annonce
 from .serializers import AnnonceCreateSerializer, AnnonceSerializer
 from django.contrib.auth.models import User 
+from rest_framework.parsers import MultiPartParser, FormParser
+
 @api_view(['POST'])
+@parser_classes([MultiPartParser, FormParser])  # Handle file uploads
+
 def create_annonce(request):
     """
     Create a new Annonce.
