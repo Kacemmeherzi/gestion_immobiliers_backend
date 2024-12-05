@@ -5,10 +5,18 @@ from .models import Annonce
 from .serializers import AnnonceCreateSerializer, AnnonceSerializer
 from django.contrib.auth.models import User 
 from rest_framework.parsers import MultiPartParser, FormParser
+from drf_yasg.utils import swagger_auto_schema
+
+
+
 
 @api_view(['POST'])
-@parser_classes([MultiPartParser, FormParser])  # Handle file uploads
-
+@swagger_auto_schema(
+    operation_description="Create a new Annonce",
+    request_body=AnnonceCreateSerializer,  # Specify the serializer for the request body
+    responses={201: AnnonceCreateSerializer}  # Define what the response looks like
+)
+@parser_classes([MultiPartParser, FormParser]) 
 def create_annonce(request):
     """
     Create a new Annonce.
