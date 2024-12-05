@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'favorites', 
     'commentaires',
     'occupations',
-    'users'
+    'users',
+    'prediction',
     
     
 ]
@@ -120,6 +121,16 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+#files 
+import os
+
+# Base directory
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Media settings
+MEDIA_URL = '/media/'  # Public URL of media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # File system path to store uploaded files
 
 
 # Static files (CSS, JavaScript, Images)
