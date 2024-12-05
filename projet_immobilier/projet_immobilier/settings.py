@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'occupations',
     'users',
     'prediction',
-    
+    'drf_yasg'
     
 ]
 
